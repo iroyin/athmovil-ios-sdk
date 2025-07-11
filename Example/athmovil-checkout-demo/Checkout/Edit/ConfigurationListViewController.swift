@@ -12,15 +12,12 @@ import athmovil_checkout
 
 enum selectableList {
     case theme(String)
-    case newFlow(String)
     case enviroment(String)
     
     var rows: [String] {
         switch self {
             case .theme:
                 return UserPreferences.shared.themeList
-            case .newFlow:
-                return UserPreferences.shared.isNewFlow
             default:
                 return UserPreferences.shared.enviroments
         }
@@ -63,8 +60,6 @@ class ConfigurationListViewController: UIViewController {
         switch currentType {
             case let .enviroment(selectedEnviroment):
                 selectedIndex = listRows.firstIndex { $0 == selectedEnviroment } ?? 0
-            case let .newFlow(selectedNewFlow):
-                selectedIndex = listRows.firstIndex { $0 == selectedNewFlow } ?? 0
             case let .theme(selectedTheme):
                 selectedIndex = listRows.firstIndex { $0 == selectedTheme } ?? 0
         }
@@ -78,8 +73,6 @@ class ConfigurationListViewController: UIViewController {
             switch self.currentType {
                 case .enviroment:
                     self.onSelectedConfiguration?(.enviroment(selectedName))
-                case .newFlow:
-                    self.onSelectedConfiguration?(.newFlow(selectedName))
                 case .theme:
                     self.onSelectedConfiguration?(.theme(selectedName))
             }

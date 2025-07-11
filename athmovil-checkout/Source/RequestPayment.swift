@@ -22,9 +22,16 @@ extension Request {
                             body: currentPayment.paymentRequest, headers: headers) { result in
             
             switch result {
-                case .success:
-                    result.decoding(PaymentSecureResponseCodable.self) { resultDecoding in
-                        completion(map(resultDecoding, currentPayment: currentPayment))
+                case .success(let data):
+                    #if DEBUG
+                        print("Raw response data: \(String(data: data, encoding: .utf8) ?? "Unable to decode data")")
+                    #endif
+                    do {
+                        let decoded = try JSONDecoder().decode(PaymentSecureResponseCodable.self, from: data)
+                        completion(.success(decoded))
+                    } catch {
+                        let netWorkError = ATHMPaymentError(message: "Decoding failed: \(error.localizedDescription)", source: .response)
+                        completion(.failure(netWorkError))
                     }
                 case .failure(let error):
                     let netWorkError = ATHMPaymentError(

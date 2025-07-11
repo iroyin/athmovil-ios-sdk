@@ -9,11 +9,6 @@
 import UIKit
 import athmovil_checkout
 
-enum NewFlow: String {
-    case SI
-    case NO
-}
-
 class CheckoutViewController: UIViewController {
 
     // MARK: Properties
@@ -60,11 +55,7 @@ class CheckoutViewController: UIViewController {
         let businessAccount = ATHMBusinessAccount(token: userPref.publicToken)
         
         //NEW FLOW SECURE
-        if(userPref.newFlow == NewFlow.SI.rawValue){
-            payNewFlow(scheme:scheme,businessAccount:businessAccount,payment:payment)
-        }else{
-            payOldFlow(scheme:scheme,businessAccount:businessAccount,payment:payment)
-        }
+        payNewFlow(scheme:scheme,businessAccount:businessAccount,payment:payment)
     }
     
     private func payNewFlow(scheme:ATHMURLScheme,businessAccount:ATHMBusinessAccount,payment:ATHMPayment){
@@ -87,24 +78,6 @@ class CheckoutViewController: UIViewController {
         request.pay(handler: handler)
     }
     
-    private func payOldFlow(scheme:ATHMURLScheme,businessAccount:ATHMBusinessAccount,payment:ATHMPayment){
-        let request = ATHMPaymentRequest(account: businessAccount, scheme: scheme,payment: payment)
-        if(userPref.timeOut != 0.0){
-            request.timeout = userPref.timeOut
-        }
-        let handler = ATHMPaymentHandler(onCompleted: { [weak self] (payment) in
-            self?.presentTransactionResult(payment: payment)
-        }, onExpired: { [weak self] (payment) in
-            self?.presentTransactionResult(payment: payment)
-        }, onCancelled: { [weak self] (payment) in
-            self?.presentTransactionResult(payment: payment)
-        }, onFailed: { [weak self] (payment) in
-            self?.presentTransactionResult(payment: payment)
-        }) { [weak self] (error: ATHMPaymentError) in
-            self?.present(messageFailure: error.failureReason, messageTitle: error.errorDescription)
-        }
-        request.pay(handler: handler)
-    }
     
     func setAdditional(_ cell: UITableViewCell, indexPath: IndexPath) {
         switch indexPath.row {

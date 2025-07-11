@@ -14,7 +14,6 @@ enum DefaultSectionCellType: Int {
     case paymentAmount
     case theme
     case enviroment
-    case newFlow
     // Second section
     case subTotal
     case tax
@@ -33,8 +32,6 @@ extension DefaultSectionCellType {
             return "Theme"
         case .enviroment:
             return "Enviroment"
-        case .newFlow:
-            return "New Flow"
         case .tax:
             return "Tax"
         case .subTotal:

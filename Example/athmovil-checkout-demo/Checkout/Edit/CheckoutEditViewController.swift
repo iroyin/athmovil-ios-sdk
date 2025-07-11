@@ -12,20 +12,14 @@ import athmovil_checkout
 class CheckoutEditViewController: UIViewController, UIGestureRecognizerDelegate {
 
     @IBOutlet weak var tableView: UITableView!
-    
-    let selectedNewFlow = UserPreferences.shared.newFlow
  
-    var cellRows: [[DefaultSectionCellType]] = [[.publicToken,.timeOut,.paymentAmount,.theme, .enviroment, .newFlow],
-                                                 [.subTotal,.tax,.metadata1,.metadata2]]
+    var cellRows: [[DefaultSectionCellType]] = [[.publicToken,.timeOut,.paymentAmount,.theme, .enviroment],
+                                                [.subTotal,.tax,.metadata1,.metadata2, .phoneNumber]]
     
     var titleSection = ["CONFIGURATION","OPTIONAL PARAMETERS"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if(selectedNewFlow == NewFlow.SI.rawValue){
-            self.cellRows =  [[.publicToken,.timeOut,.paymentAmount,.theme, .enviroment, .newFlow],
-                              [.subTotal,.tax,.metadata1,.metadata2,.phoneNumber]]
-        }
         setupNavigationBar()
         setupTableView()
     }
@@ -134,10 +128,6 @@ extension CheckoutEditViewController: UITableViewDataSource {
                 cell.textLabel?.text = row.title
                 cell.detailTextLabel?.adjustsFontSizeToFitWidth = true
             cell.detailTextLabel?.text = UserPreferences.shared.enviroment
-        case .newFlow:
-                cell.textLabel?.text = row.title
-                cell.detailTextLabel?.adjustsFontSizeToFitWidth = true
-            cell.detailTextLabel?.text = UserPreferences.shared.newFlow
         // OPTIONAL PARAMETERS
         case .subTotal:
             inputCell(cell, title: row.title, value: "$\(UserPreferences.shared.subTotal)")
@@ -208,22 +198,6 @@ extension CheckoutEditViewController: UITableViewDelegate {
                     if case let .enviroment(newEnv) = selectedType {
                         UserPreferences.shared.enviroment = newEnv
                         tableView.reloadRows(at: [indexPath], with: .fade)
-                    }
-                }
-            case .newFlow:
-                let selectedNewFlow = UserPreferences.shared.newFlow
-                showConfigurable(type: .newFlow(selectedNewFlow)) { selectedType in
-                    if case let .newFlow(newFlow) = selectedType {
-                        UserPreferences.shared.newFlow = newFlow
-                        if(newFlow == NewFlow.SI.rawValue){
-                            self.cellRows =  [[.publicToken,.timeOut,.paymentAmount,.theme, .enviroment, .newFlow],
-                                         [.subTotal,.tax,.metadata1,.metadata2,.phoneNumber]]
-                        }else{
-                            UserPreferences.shared.phoneNumber = ""
-                            self.cellRows =  [[.publicToken,.timeOut,.paymentAmount,.theme, .enviroment, .newFlow],
-                                         [.subTotal,.tax,.metadata1,.metadata2]]
-                        }
-                        tableView.reloadData()
                     }
                 }
             default:

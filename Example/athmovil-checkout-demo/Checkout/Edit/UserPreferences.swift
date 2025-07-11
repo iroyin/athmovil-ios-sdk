@@ -12,12 +12,11 @@ import athmovil_checkout
 class UserPreferences: NSObject, NSCoding {
     static var shared = UserPreferences.read()
     // CONFIGURATION
-    var publicToken = "e7d8056974085111e695b5f7a99d27c206a73089"
+    var publicToken = "dummy"
     var timeOut = 600.0
     var paymentAmount = 1.0
     var theme = 0
     var enviroment = "Production"
-    var newFlow = NewFlow.NO.rawValue
     // OPTIONAL PARAMETERS
     var subTotal = 0.0
     var tax = 0.0
@@ -27,8 +26,7 @@ class UserPreferences: NSObject, NSCoding {
     var phoneNumber = ""
     
     let themeList: [String] = [ATHMThemeClassic.name, ATHMThemeLight.name, ATHMThemeNight.name]
-    let enviroments: [String] =  ["Production"]
-    let isNewFlow: [String] =  [NewFlow.NO.rawValue, NewFlow.SI.rawValue]
+    let enviroments: [String] =  ["Quality","QualityCert","Pilot", "Production"]
         
     fileprivate override init() {
         super.init()
@@ -41,7 +39,6 @@ class UserPreferences: NSObject, NSCoding {
         aCoder.encode(paymentAmount, forKey: "paymentAmount")
         aCoder.encode(theme, forKey: "themeIndex")
         aCoder.encode(enviroment, forKey: "enviroment")
-        aCoder.encode(newFlow, forKey: "newFlow")
         aCoder.encode(subTotal, forKey: "subTotal")
         aCoder.encode(tax, forKey: "tax")
         aCoder.encode(metadata1, forKey: "metadata1")
@@ -57,7 +54,6 @@ class UserPreferences: NSObject, NSCoding {
         paymentAmount = aDecoder.decodeDouble(forKey: "paymentAmount")
         theme = aDecoder.decodeInteger(forKey: "themeIndex")
         enviroment = (aDecoder.decodeObject(forKey: "enviroment") as? String) ?? "Production"
-        newFlow = (aDecoder.decodeObject(forKey: "newFlow") as? String) ?? NewFlow.NO.rawValue
         subTotal = aDecoder.decodeDouble(forKey: "subTotal")
         tax = aDecoder.decodeDouble(forKey: "tax")
         metadata1 = aDecoder.decodeObject(forKey: "metadata1") as? String ?? ""
