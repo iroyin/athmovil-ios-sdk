@@ -10,12 +10,6 @@ import Foundation
 
 struct APIPayments {
     
-    static let api: APIClient = {
-        APIClient(configuration: .defaultATHMovil(
-            httpAdditionalHeaders: .athMovilHeaders)
-        )
-    }()
-
     static let apiAWS: APIClientAWS = {
         APIClientAWS(
             configuration: .defaultATHMovil(

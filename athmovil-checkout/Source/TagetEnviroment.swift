@@ -9,10 +9,6 @@
 import Foundation
 
 enum TargetEnviroment: String, CaseIterable {
-    case custom
-    case quality
-    case qualitycert
-    case pilot
     case production
     
     static var selectedEnviroment: TargetEnviroment = .production
@@ -46,16 +42,7 @@ extension TargetEnviroment {
     func client(
         currentRequest: PaymentRequestable
     ) -> APIClientRequestable {
-        switch (self, currentRequest.businessAccount.isSimulatedToken) {
-            case (_, true):
-                return APIClientSimulated(paymentRequest: currentRequest)
-            case (.quality, _):
-                return APIPayments.apiAWS
-            case (.qualitycert, _):
-                return APIPayments.apiAWS
-            default:
-                return APIPayments.api
-        }
+        return APIPayments.apiAWS
     }
     
     func client(
